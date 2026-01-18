@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Quiz de Futebol</title>
+<style>
+body{
+  font-family: Arial;
+  background:#0b6623;
+  color:#fff;
+  text-align:center;
+}
+button{
+  padding:12px 20px;
+  margin:8px;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
+}
+#menu button{background:#ffd700;}
+.opcao{display:block;width:90%;margin:8px auto;}
+#barraBox{width:90%;height:20px;background:#444;margin:10px auto;border-radius:10px;}
+#barra{height:100%;width:0%;background:#00ff7f;border-radius:10px;}
+#quiz,#resultado{display:none;}
+</style>
+</head>
+
+<body>
+
+<h1>⚽ Quiz de Futebol</h1>
+
+<div id="menu">
+  <h2>Escolha o nível</h2>
+  <button onclick="iniciar('facil')">🟢 Fácil</button>
+  <button onclick="iniciar('dificil')">🔴 Difícil</button>
+</div>
+
+<div id="quiz">
+  <div id="barraBox"><div id="barra"></div></div>
+  <p id="contador"></p>
+  <h2 id="pergunta"></h2>
+  <div id="opcoes"></div>
+  <p id="feedback"></p>
+</div>
+
+<div id="resultado">
+  <h2 id="final"></h2>
+  <button onclick="voltarMenu()">Jogar novamente</button>
+</div>
+
+<script>
+// ===== PERGUNTAS =====
+const faceis = [
+ {p:"Quantos jogadores tem um time?",o:["9","10","11","12"],r:2},
+ {p:"Quem é o Rei do Futebol?",o:["Pelé","Messi","Neymar","Cristiano"],r:0},
+ {p:"Quantos tempos tem o jogo?",o:["1","2","3","4"],r:1},
+ {p:"Qual cor do cartão de expulsão?",o:["Amarelo","Azul","Vermelho","Verde"],r:2},
+ {p:"Qual país sediou a Copa 2014?",o:["Espanha","Brasil","França","Alemanha"],r:1},
+ // 👉 ADICIONE ATÉ 25
+];
+
+const dificeis = [
+ {p:"Quem ganhou a Bola de Ouro 2007?",o:["Messi","Cristiano","Kaká","Ronaldinho"],r:2},
+ {p:"Quem ganhou a Copa 2002?",o:["Brasil","Alemanha","Itália","França"],r:0},
+ {p:"Maior artilheiro da Champions?",o:["Messi","Cristiano","Lewandowski","Benzema"],r:1},
+ {p:"Quem fez o gol 1000?",o:["Romário","Pelé","Zico","Ronaldo"],r:1},
+ {p:"Qual clube revelou Neymar?",o:["Flamengo","Santos","PSG","Barça"],r:1},
+ // 👉 ADICIONE ATÉ 25
+];
+
+// ===== CONTROLE =====
+let perguntas = [];
+let indice = 0;
+let pontos = 0;
+let inicio = 0;
+const total = 25;
+
+function iniciar(nivel){
+  inicio = 0;
+  pontos = 0;
+  indice = 0;
+  perguntas = (nivel==="facil"?faceis:dificeis);
+  document.getElementById("menu").style.display="none";
+  document.getElementById("resultado").style.display="none";
+  document.getElementById("quiz").style.display="block";
+  mostrar();
+}
+
+function mostrar(){
+  if(indice>=total || inicio+indice>=perguntas.length){
+    finalizar();
+    return;
+  }
+
+  let q = perguntas[inicio+indice];
+  document.getElementById("pergunta").innerText = q.p;
+  document.getElementById("contador").innerText = (indice+1)+" / "+total;
+  document.getElementById("barra").style.width = ((indice+1)/total*100)+"%";
+  document.getElementById("feedback").innerText = "";
+
+  let ops = "";
+  q.o.forEach((t,i)=>{
+    ops += `<button class="opcao" onclick="responder(${i})">${t}</button>`;
+  });
+  document.getElementById("opcoes").innerHTML = ops;
+}
+
+function responder(i){
+  let q = perguntas[inicio+indice];
+  if(i===q.r){
+    pontos++;
+    document.getElementById("feedback").innerText="✅ Acertou!";
+  }else{
+    document.getElementById("feedback").innerText="❌ Errou! Correto: "+q.o[q.r];
+  }
+  indice++;
+  setTimeout(mostrar,1000);
+}
+
+function finalizar(){
+  document.getElementById("quiz").style.display="none";
+  document.getElementById("resultado").style.display="block";
+  document.getElementById("final").innerText =
+    "Você acertou "+pontos+" de "+total;
+  inicio += total; // PRÓXIMO BLOCO (sem embaralhar)
+}
+
+function voltarMenu(){
+  document.getElementById("resultado").style.display="none";
+  document.getElementById("menu").style.display="block";
+}
+</script>
+
+</body>
+                                                  </html>
+                     
